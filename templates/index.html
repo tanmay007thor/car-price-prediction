@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Prediction</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Car Price Predictor</h1>
+
+        <form id="prediction-form" class="prediction-form">
+            <div class="form-group">
+                <label for="company">Company</label>
+                <select id="company" name="company" required>
+                    <option value="" disabled selected>Select Company</option>
+                    {% for company in companies %}
+                        <option value="{{ company }}">{{ company }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="car_models">Car Model</label>
+                <select id="car_models" name="car_models" required>
+                    {% for model in car_models %}
+                        <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="year">Year</label>
+                <select id="year" name="year" required>
+                    {% for y in years %}
+                        <option value="{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="fuel_type">Fuel Type</label>
+                <select id="fuel_type" name="fuel_type" required>
+                    {% for fuel in fuel_types %}
+                        <option value="{{ fuel }}">{{ fuel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="kilo_driven">Kilometers Driven</label>
+                <input type="number" id="kilo_driven" name="kilo_driven" placeholder="e.g., 50000" required>
+            </div>
+
+            <button type="submit" class="submit-button">🔍 Predict Price</button>
+        </form>
+
+        <div id="result" class="result">
+            <h2>Estimated Price: <span id="price"></span></h2>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById("price").innerText = ` ${data.price.toLocaleString()} ₹`;
+                    document.getElementById("result").style.opacity = "1";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("There was an error with the prediction.");
+            });
+        });
+    </script>
+</body>
+</html>
