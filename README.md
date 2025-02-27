@@ -2,7 +2,7 @@
 
 ## Overview
 This is a Flask-based web application that predicts the price of a used car based on various input parameters. The app features a user-friendly UI where users can select car details and get a predicted price.
-
+![alt text](image.png)
 ## Features
 - Predicts car prices based on user input.
 - Uses a pre-trained Linear Regression model.
